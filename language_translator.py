@@ -185,7 +185,6 @@ def iterateLines(lines):
                 bracketToGet += numConditions - 1
                 skipLoop = True
         elif while_pattern.search(line):
-            # TODO figure out how to track while blocks.
             in_while = True
             condition_brackets.append("while")
             condition = re.search(r'(?<=\()(.*?)(?=\))', line).group()
