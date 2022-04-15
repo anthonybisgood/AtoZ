@@ -49,9 +49,6 @@ def declareVariables(line):
     value = value.replace(";", "")
     type = lineArr[0].split(" ")[0]
     if (type == "int"):
-        if not value.isnumeric():
-            print("CANNOT CAST TYPE STRING TO INT. VALUE:%s \nLINE:%s " %(value,line))
-            exit(1)
         value = eval_intExpr(value)
     if (type == "bool"):
         value = eval_boolExpr(value)
@@ -75,7 +72,7 @@ def eval_intExpr(line):
                 exit(1)
             elif (el in variables):
                 val = variables[el].val
-                expr = expr.replace(el, val)
+                expr = expr.replace(el, str(val))
     try:
         res = math.floor(eval(expr))
         return res
