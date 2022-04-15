@@ -1,6 +1,9 @@
 int y is 42;
 int x is 12;
-bool a is true && false && x <y;
+while (x > 0) {
+    int x is x-1;
+}
+bool a is true && false && x < y;
 string s is "fwa";
 if (s == "fwa") {
     int x is 34;

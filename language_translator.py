@@ -179,7 +179,8 @@ def iterateLines(lines):
     declare_pattern = re.compile(r'^(int|string|bool) ([A-Za-z]+) is (true|false|[0-9]+|["\s\S"]+|' + int_var_expr()
                                  + r');([\s]?)')
     print_pattern = re.compile(r'^show\((([A-Za-z]+)|"([\S\s]+)")\);$')
-    conditional_pattern = re.compile(r'^(while|if) \(' + bool_expr() + r'\) \{\s?')
+    if_pattern = re.compile(r'^(if) \(' + bool_expr() + r'\) \{\s?')
+    while_pattern = re.compile(r'^(if) \(' + bool_expr() + r'\) \{\s?')
     condition_end_pattern = re.compile(r'}')
     while_blocks = []
     while_count = 0  # counts number of concurrent loops for tracking blocks of statements.
