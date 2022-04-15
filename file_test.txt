@@ -1,3 +1,7 @@
-int hello = 54
-int y=13
-int z= 145
+@ new file
+Int hello = 54;
+Int y = 13;
+Int z = 145;
+show(z);
+show("Hello!");
+show(z)

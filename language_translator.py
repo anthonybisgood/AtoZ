@@ -4,6 +4,7 @@ Zach Empkey and Anthony Bisgood
 CSc 372 Proj 2
 """
 import re
+import sys
 
 VARIABLE_TYPES = {"string", "int", "bool"}
 # contains the name of the variable and the type and the value
@@ -31,6 +32,7 @@ def file_handler(file_name):
               " errors.")
     return lines
 
+
 # string x = "hello";
 # bool y = True;
 # int z = 1234;
@@ -44,6 +46,7 @@ def declareVariables(line):
     # adds the new variables[VarName] = Var(Type, Value)
     variables[lineArr[0].split(" ")[1]] = toAdd
 
+
 # show(x);
 # show("Hello World!");
 def printFunction(line):
@@ -54,26 +57,31 @@ def printFunction(line):
     else:
         variableName = re.search('(?<=\()(.*?)(?=\))', line).group()
         print(variables[variableName].val)
-        
+
+
 def main():
     # file_name = input()
     file_name = "file_test.txt"
     lines = file_handler(file_name)
-    for line in lines:
+    for i, line in enumerate(lines):
         lineArr = line.strip().split(" ")
+        comment_pattern = re.compile(r'^@([\S\s]+)')
+        declare_pattern = re.compile(r'^(Int|String|Bool) ([A-Za-z]+) = (true|false|[0-9]+|"[\s\S]+");([\s]?)')
+        print_pattern = re.compile(r'^show\((([A-Za-z]+)|"([\S\s]+)")\);$')
         # if commented line
-        if (lineArr[0] == '@'):
+        if (comment_pattern.search(line)):
             continue
         # if assign variable
-        if (lineArr[0] in VARIABLE_TYPES):
+        elif (declare_pattern.search(line)):
             declareVariables(line)
         # if print function
-        if (line[0:4] == "show"):
+        elif (print_pattern.search(line)):
             printFunction(line)
-        
-        
-        
-        
+        # TODO conditionals
+        else:
+            print(f"Syntax Error in line {i+1}:\n{line}")
+            sys.exit()
+
 
 if __name__ == "__main__":
     main()
