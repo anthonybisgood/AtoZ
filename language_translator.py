@@ -45,11 +45,14 @@ def declareVariables(line):
     if (lineArr[0].split(" ")[1]) in RESTRICTED_NAMES:
         return None
     # gets the value of the variable, removes semicolon
-    value = re.search('[^is]+$', line).group().strip()
+    value = re.search('(?<=is).*', line).group().strip()
+    print(value)
     value = value.replace(";", "")
-
     type = lineArr[0].split(" ")[0]
     if (type == "int"):
+        if not value.isnumeric():
+            print("CANNOT CAST TYPE STRING TO INT. VALUE:%s \nLINE:%s " %(value,line))
+            exit(1)
         value = eval_intExpr(value)
     if (type == "bool"):
         value = eval_boolExpr(value)
@@ -97,7 +100,7 @@ def eval_boolExpr(expr):
     if sol:
         for el in sol:
             # if element is not a string
-            if (el[0] == '"' and el[-1] == '"' or el == "True" or el == "False"):
+            if (el[0] == '"' and el[-1] == '"' or el == "true" or el == "false"):
                 continue
             if (el in variables):
                 val = variables[el].val
@@ -106,7 +109,7 @@ def eval_boolExpr(expr):
                 print("INVALID VARIABLE IN BOOLEAN EXPRESSION:", el,
                 "\nLINE:", expr)
                 exit(1)
-    expr = expr.replace("&&", "and").replace("||", "or").replace("!", "not")
+    expr = expr.replace("&&", " and ").replace("||", " or ").replace("!", " not ").replace("true", " True ").replace("false", " False ")
     try:
         res = eval(expr)
         return res
@@ -152,9 +155,7 @@ def bool_expr():
     Getter for regex for bool expressions.
     :return: raw string
     """
-    return r'(([!]?(true|false|[A-Za-z]+) (&&|\|\|) [!]?(true|false|[A-Za-z]+))' \
-           r'|(([0-9A-Za-z]+) (<|>|==) ([0-9A-Za-z]+))|[!]?(true|false|[A-Za-z]+))'
-    
+    return r'(([!]?(true|false|[A-Za-z]+) (&&|\|\|) )|(([0-9A-Za-z]+) (<|>|==) )|[!]?(true|false|[A-Za-z]+))+'
 
 def iterateLines(lines):
     """Iterates over teh lines in the output of given code.
@@ -168,7 +169,8 @@ def iterateLines(lines):
     bracketToGet = 0
     numConditions = 0
     comment_pattern = re.compile(r'^([\s]*)@([\S\s]+)')
-    declare_pattern = re.compile(r'^(int|string|bool) ([A-Za-z]+) is (true|false|[0-9]+|"[\s\S]+"|' + int_var_expr()
+    # TODO: make is so declare bool x = True || False && 31 < 2 returns something 
+    declare_pattern = re.compile(r'^(int|string|bool) ([A-Za-z]+) is (true|false|[0-9]+|["\s\S"]+|' + int_var_expr()
                                  + r');([\s]?)')
     print_pattern = re.compile(r'^show\((([A-Za-z]+)|"([\S\s]+)")\);$')
     conditional_pattern = re.compile(r'^(while|if) \(' + bool_expr() + r'\) \{\s?')
@@ -205,7 +207,7 @@ def iterateLines(lines):
         # if print function, works for both str and variable printing
         elif print_pattern.search(line):
             if printFunction(line) is None:
-                print("ERROR!!! STRING FORMATED INCORRECTLY.\nLINE:", line)
+                print("ERROR!!! STRING FORMATTED INCORRECTLY.\nLINE:", line)
                 return
         elif condition_end_pattern:
             continue
