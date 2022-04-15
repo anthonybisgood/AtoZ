@@ -1,8 +1,10 @@
-@ new file
-Int hello = 54;
-Int y = 13;
-Int z = 145;
-show(z);
-show("Hello!");
-show(z);
-while (true) {
+int y is 42;
+int x is 1+y*4/3;
+if (True) {
+    int x is 34;
+    if (False) {
+        if (False) {
+        }
+    }
+}
+

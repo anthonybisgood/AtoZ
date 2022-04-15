@@ -1,1 +1,1 @@
-print(lineArr[0].split(" ")[1])
+if
