@@ -1,2 +1,2 @@
 
-        res = eval(expr)
+    :return: raw string'
