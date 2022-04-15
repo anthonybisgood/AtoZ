@@ -59,6 +59,7 @@ def declareVariables(line):
     variables[lineArr[0].split(" ")[1]] = toAdd
     return True
 
+
 #TODO make it so this works with variables
 def eval_intExpr(line):
     expr = re.search('[^is]+$', line).group().strip()
@@ -74,6 +75,7 @@ def eval_intExpr(line):
             val = variables[el].val
             expr = expr.replace(el, val)
     return math.floor(eval(expr))
+
 
 def eval_boolExpr(expr):
     return eval(expr)
@@ -95,6 +97,7 @@ def printFunction(line):
             return
         print(variables[variableName].val)
     return True
+
 
 # TODO: Finish function
 def ifFunction(line):
@@ -118,6 +121,14 @@ def bool_expr():
     """
     return r'(([!]?(true|false|[A-Za-z]+) (&&|\|\|) )|(([0-9A-Za-z]+) (<|>|==) )|[!]?(true|false|[A-Za-z]+))+'
 
+
+def execute_statements(stmts):
+    print(stmts[0])
+    while eval_boolExpr(stmts[0]):
+        print(stmts[0])
+        iterateLines(stmts[1:])
+
+
 def iterateLines(lines):
     """Iterates over teh lines in the output of given code.
 
@@ -133,8 +144,13 @@ def iterateLines(lines):
     declare_pattern = re.compile(r'^(int|string|bool) ([A-Za-z]+) is (true|false|[0-9]+|"[\s\S]+"|' + int_var_expr()
                                  + r');([\s]?)')
     print_pattern = re.compile(r'^show\((([A-Za-z]+)|"([\S\s]+)")\);$')
-    conditional_pattern = re.compile(r'^(while|if) \(' + bool_expr() + r'\) \{\s?')
+    if_pattern = re.compile(r'^(if) \(' + bool_expr() + r'\) \{\s?')
+    while_pattern = re.compile(r'^(while) \(' + bool_expr() + r'\) \{\s?')
     condition_end_pattern = re.compile(r'}')
+    while_blocks = []
+    while_count = 0  # counts number of concurrent loops for tracking blocks of statements.
+    condition_brackets = [] # stack of strings which represent what each { is associated with.
+    in_while = False
     for i, line in enumerate(lines):
         # print(lines[i].strip("\n"))
         line = line.strip()
@@ -147,18 +163,33 @@ def iterateLines(lines):
         elif "{" in line:
             numConditions += 1
 
-        if comment_pattern.search(line) or skipLoop:
+        if in_while:
+            if condition_end_pattern:
+                end_of = condition_brackets.pop()
+                if end_of == "while":
+                    execute_statements(while_blocks)
+                    in_while = False
+            else:
+                while_blocks.append(line)
+        elif comment_pattern.search(line) or skipLoop:
             if skipLoop:
                 if "}" in line and numConditions == bracketToGet:
                     skipLoop = False
             continue
-        elif conditional_pattern.search(line):
+        elif if_pattern.search(line):
+            condition_brackets.append("if")
             condition = re.search(r'(?<=\()(.*?)(?=\))', line).group()
             if ifFunction(condition):
                 continue
             else:
                 bracketToGet += numConditions - 1
                 skipLoop = True
+        elif while_pattern.search(line):
+            # TODO figure out how to track while blocks.
+            in_while = True
+            condition_brackets.append("while")
+            condition = re.search(r'(?<=\()(.*?)(?=\))', line).group()
+            while_blocks.append(condition)
         # if assign variable
         elif declare_pattern.search(line):
             if declareVariables(line) is None:

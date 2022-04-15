@@ -1,8 +1,13 @@
 int y is 42;
 int x is 1+y*4/3;
 show(x);
+while (x > 0) {
+    int x is x-1;
+}
+show(x);
 if (True) {
     int x is 34;
+    show(x);
     show("Should be here!");
     if (False) {
         show("Shouldn't be here!");
