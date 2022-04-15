@@ -1,1 +1,2 @@
-print(line)
+
+        res = eval(expr)

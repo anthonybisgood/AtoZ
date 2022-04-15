@@ -14,8 +14,9 @@ VARIABLE_TYPES = ["string", "int", "bool"]
 # varName:(type, value)
 variables = {}
 
-
 class Var:
+    """A class that stores the type and value of the variable.
+    """
     def __init__(self, type, val):
         self.type = type
         self.val = val
@@ -36,10 +37,22 @@ def file_handler(file_name):
     return lines
 
 
-# string x = "hello";
-# bool y = True;
-# int z = 1234;
 def declareVariables(line):
+    """Function for declaring variables in our language. Stores variables by name:(type, value)
+    if the class Var. Also performs type checking to and variable name checking to make sure
+    that you cant declare a variable from another variable that hasnt been declared yet.
+    Examples:
+        string x = "hello";
+        bool y = True;
+        int z = 1234;
+        int a = z-23;
+    Args:
+        line (String): The current line of the variable we want to declare, written in 
+        our new language
+
+    Returns:
+        Boolean: True or None depending on if the operation succeded
+    """
     # splits line into array around =
     lineArr = line.strip().split("is")
     if (lineArr[0].split(" ")[1]) in RESTRICTED_NAMES:
@@ -58,9 +71,16 @@ def declareVariables(line):
     variables[lineArr[0].split(" ")[1]] = toAdd
     return True
 
-    """ takes in 
-    """
 def eval_intExpr(line):
+    """Evaluates integer expressions and can handle +,-,*,/,and % operations. Uses eval function
+    to evaluate and return an integer.
+
+    Args:
+        line (String): The current line of the variable we are performing integer evaluation on.
+
+    Returns:
+        int: the result of our line parameter
+    """
     expr = re.search('[^is]+$', line).group().strip()
     sol = re.findall('[a-zA-Z]+', expr)
     # if variables
@@ -118,19 +138,27 @@ def eval_boolExpr(expr):
 # show(x);
 # show("Hello World!");
 def printFunction(line):
+    """When called, prints out the line 
+
+    Args:
+        line (String): The line, including show() that we are going to print
+
+    Returns:
+        Boolean/None: True if it works, none if formated incorrectly
+    """
+    line = re.search('(?<=\()(.*?)(?=\))', line).group()
     # print string
-    if (line[5] == '"'):
+    if (line[0] == '"' and line[-1] == '"'):
         toPrint = re.search('(?<=")(.*?)(?=")', line)
         if toPrint == None:
             return None
         print(toPrint.group())
-    else:
-        variableName = re.search('(?<=\()(.*?)(?=\))', line).group()
-        if (variableName not in variables):
-            print("Variable name inputed is not a valid variable")
-            return
-        print(variables[variableName].val)
-    return True
+        return True
+    # print variable
+    elif (line in variables):
+        print(variables[line].val)
+        return True
+    return None
 
 
 def ifFunction(condition):

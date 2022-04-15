@@ -1,9 +1,13 @@
 int y is 42;
 int x is y - 12;
+show();
+show("ffff");
+show(x);
+show("fff);
 while (x > 0) {
     int x is x-1;
 }
-show(x);
+show();
 bool a is true && false && x < y;
 string s is "fwa";
 if (s == "fwa") {
