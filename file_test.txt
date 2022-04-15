@@ -1,6 +1,6 @@
 int y is 42;
-int x is 1+y*4/3;
-show(x);
+int x is 12;
+@show(x);
 if (True) {
     int x is 34;
     show("Should be here!");
@@ -10,4 +10,3 @@ if (True) {
         }
     }
 }
-

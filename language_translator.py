@@ -59,24 +59,62 @@ def declareVariables(line):
     variables[lineArr[0].split(" ")[1]] = toAdd
     return True
 
-#TODO make it so this works with variables
+    """ takes in 
+    """
 def eval_intExpr(line):
     expr = re.search('[^is]+$', line).group().strip()
     sol = re.findall('[a-zA-Z]+', expr)
-    if not sol:
-        return expr
-    for el in sol:
-        if (el not in variables):
-            print("INVALID VARIABLE IN INTEGER EXPRESSION:", re.findall('[a-zA-Z]+', expr),
+    # if variables
+    if sol:
+        for el in sol:
+            if (el not in variables):
+                print("INVALID VARIABLE IN INTEGER EXPRESSION:", re.findall('[a-zA-Z]+', expr),
+                "\nLINE:", line)
+                exit(1)
+            elif (el in variables):
+                val = variables[el].val
+                expr = expr.replace(el, val)
+    try:
+        res = math.floor(eval(expr))
+        return res
+    except:
+        print("INVALID INTEGER EXPRESSION:", re.findall('[a-zA-Z]+', expr),
               "\nLINE:", line)
-            exit(1)
-        elif (el in variables):
-            val = variables[el].val
-            expr = expr.replace(el, val)
-    return math.floor(eval(expr))
+        exit(1)
+
 
 def eval_boolExpr(expr):
-    return eval(expr)
+    """Handles boolean expressions, can handle >, <, ==, not, and, or, and integer expresions
+    in boolean expression
+
+    Args:
+        expr (String): a string representing a boolean expression
+
+    Returns:
+        Boolean: the evaluation of the boolean expression
+    """
+    expr = '"y" > "X" && x < y && True'
+    sol = re.findall('["a-zA-Z"]+', expr)
+    if sol:
+        for el in sol:
+            # if element is not a string
+            if (el[0] == '"' and el[-1] == '"' or el == "True" or el == "False"):
+                continue
+            if (el in variables):
+                val = variables[el].val
+                expr = expr.replace(el, str(val))
+            else:
+                print("INVALID VARIABLE IN BOOLEAN EXPRESSION:", el,
+                "\nLINE:", expr)
+                exit(1)
+    expr = expr.replace("&&", "and").replace("||", "or").replace("!", "not")
+    try:
+        res = eval(expr)
+        return res
+    except:
+        print("INVALID BOOLEAN EXPRESSION:", re.findall('[a-zA-Z]+', expr),
+              "\nLINE:", expr)
+        exit(1)
 
 
 # show(x);
@@ -97,8 +135,9 @@ def printFunction(line):
     return True
 
 # TODO: Finish function
-def ifFunction(line):
-    if (line == 'True'):
+def ifFunction(condition):
+    toRet = eval_boolExpr(condition)
+    if (condition == 'True'):
         return True
     return False
 
@@ -118,7 +157,7 @@ def bool_expr():
     """
     return r'(([!]?(true|false|[A-Za-z]+) (&&|\|\|) [!]?(true|false|[A-Za-z]+))' \
            r'|(([0-9A-Za-z]+) (<|>|==) ([0-9A-Za-z]+))|[!]?(true|false|[A-Za-z]+))'
-
+    
 
 def iterateLines(lines):
     """Iterates over teh lines in the output of given code.
