@@ -1,7 +1,7 @@
 int y is 42;
 int x is 12;
 @show(x);
-if (True) {
+if (True && False) {
     int x is 34;
     show("Should be here!");
     if (False) {

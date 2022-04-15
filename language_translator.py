@@ -93,7 +93,6 @@ def eval_boolExpr(expr):
     Returns:
         Boolean: the evaluation of the boolean expression
     """
-    expr = '"y" > "X" && x < y && True'
     sol = re.findall('["a-zA-Z"]+', expr)
     if sol:
         for el in sol:
@@ -134,12 +133,10 @@ def printFunction(line):
         print(variables[variableName].val)
     return True
 
-# TODO: Finish function
+
 def ifFunction(condition):
     toRet = eval_boolExpr(condition)
-    if (condition == 'True'):
-        return True
-    return False
+    return toRet
 
 
 def int_var_expr():
