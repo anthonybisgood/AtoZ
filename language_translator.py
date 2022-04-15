@@ -112,41 +112,50 @@ def iterateLines(lines):
     # which level you are in
     bracketToGet = 0
     numConditions = 0
-    for i in range(len(lines)):
+    comment_pattern = re.compile(r'^@([\S\s]+)')
+    declare_pattern = re.compile(r'^(int|string|bool) ([A-Za-z]+) is (true|false|[0-9]+|"[\s\S]+");([\s]?)')
+    print_pattern = re.compile(r'^show\((([A-Za-z]+)|"([\S\s]+)")\);$')
+    conditional_pattern = re.compile(r'^(while|if) \((([!]?(true|false|[A-Za-z]+) (&&|\|\|) [!]?(true|false|[A-Za-z]+))|'
+                                     r'(([0-9A-Za-z]+) (<|>|==) ([0-9A-Za-z]+))|[!]?(true|false|[A-Za-z]+))\) {\s?')
+    boolexpr_pattern = re.compile(r'(([!]?(true|false|[A-Za-z]+) (&&|\|\|) [!]?(true|false|[A-Za-z]+))|'
+                                  r'(([0-9A-Za-z]+) (<|>|==) ([0-9A-Za-z]+))|[!]?(true|false|[A-Za-z]+))')
+    for i, line in enumerate(lines):
         # print(lines[i].strip("\n"))
-        line = lines[i].strip()
+        #line = lines[i].strip()
+
         if not line:
             continue
 
-        if ("}" in line):
+        if "}" in line:
             numConditions -= 1
-        elif ("{" in line):
+        elif "{" in line:
             numConditions += 1
 
-        if (line[0] == '@' or skipLoop):
-            if (skipLoop):
-                if ("}" in line and numConditions == bracketToGet):
+        if comment_pattern.search(line) or skipLoop:
+            if skipLoop:
+                if "}" in line and numConditions == bracketToGet:
                     skipLoop = False
             continue
-        if (line[0:2] == "if"):
-            condition = re.search('(?<=\()(.*?)(?=\))', line).group()
-            if ifFunction(condition) == True:
+        elif conditional_pattern.search(line):
+            condition = re.search(r'(?<=\()(.*?)(?=\))', line).group()
+            if ifFunction(condition):
                 continue
             else:
                 bracketToGet += numConditions - 1
                 skipLoop = True
-
-        lineArr = line.strip().split(" ")
         # if assign variable
-        if (lineArr[0] in VARIABLE_TYPES):
-            if declareVariables(line) == None:
-                print("ERROR!!! CANNOT NAME VARIABLES TO RESTRICTED NAMES.\nLINE:",line)
+        elif declare_pattern.search(line):
+            if declareVariables(line) is None:
+                print("ERROR!!! CANNOT NAME VARIABLES TO RESTRICTED NAMES.\nLINE:", line)
                 return
         # if print function, works for both str and variable printing
-        if (line[0:4] == "show"):
-            if printFunction(line) == None:
-                print("ERROR!!! STRING FORMATED INCORRECTLY.\nLINE:",line)
+        elif print_pattern.search(line):
+            if printFunction(line) is None:
+                print("ERROR!!! STRING FORMATED INCORRECTLY.\nLINE:", line)
                 return
+        else:
+            print(f"Syntax Error in line {i+1}:\n{line}")
+            sys.exit()
 
 
 

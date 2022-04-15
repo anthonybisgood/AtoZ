@@ -1,8 +1,11 @@
 int y is 42;
 int x is 1+y*4/3;
+show(y);
 if (True) {
     int x is 34;
+    show("Should be here!");
     if (False) {
+        show("Shouldn't be here!");
         if (False) {
         }
     }
