@@ -1,12 +1,10 @@
-int x is 3 + 5;
-
+int y is 42
+int x is 1+y*4/3
 if (True) {
     int x is 34
     if (False) {
         if (False) {
         }
-        show(x)
     }
-    show(x)
 }
 

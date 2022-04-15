@@ -1,2 +1,1 @@
-
-def declareVariables(line):
+if

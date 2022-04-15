@@ -3,6 +3,8 @@ language_translator.py
 Zach Empkey and Anthony Bisgood
 CSc 372 Proj 2
 """
+
+import math
 import re
 
 RESTRICTED_NAMES = ["string", "int", "bool", "if", "while", "is"]
@@ -44,16 +46,33 @@ def declareVariables(line):
     value = re.search('[^is]+$', line).group().strip()
     type = lineArr[0].split(" ")[0]
     if (type == "int"):
-        eval_intExpr(value)
+        value = eval_intExpr(line)
+    if (type == "bool"):
+        value = eval_boolExpr(value)
     # creates new Var object with Var type and value
     toAdd = Var(type, value)
     # adds the new variables[VarName] = Var(Type, Value)
     variables[lineArr[0].split(" ")[1]] = toAdd
     return True
 
-def eval_intExpr(expr):
-    print(expr)
+#TODO make it so this works with variables
+def eval_intExpr(line):
+    expr = re.search('[^is]+$', line).group().strip()
+    sol = re.findall('[a-zA-Z]+', expr)
+    if not sol:
+        return expr
+    for el in sol:
+        if (el not in variables):
+            print("INVALID VARIABLE IN INTEGER EXPRESSION:", re.findall('[a-zA-Z]+', expr),
+              "\nLINE:", line)
+            exit(1)
+        elif (el in variables):
+            val = variables[el].val
+            expr = expr.replace(el, val)
+    return math.floor(eval(expr))
 
+def eval_boolExpr(expr):
+    return eval(expr)
 
 # show(x);
 # show("Hello World!");
