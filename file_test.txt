@@ -1,5 +1,7 @@
+int x is 3 + 5;
+
 if (True) {
-    int x = 34
+    int x is 34
     if (False) {
         if (False) {
         }

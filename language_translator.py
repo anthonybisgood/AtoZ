@@ -5,7 +5,7 @@ CSc 372 Proj 2
 """
 import re
 
-RESTRICTED_NAMES = ["string", "int", "bool", "if", "while"]
+RESTRICTED_NAMES = ["string", "int", "bool", "if", "while", "is"]
 VARIABLE_TYPES = ["string", "int", "bool"]
 # contains the name of the variable and the type and the value
 # varName:(type, value)
@@ -37,16 +37,23 @@ def file_handler(file_name):
 # int z = 1234;
 def declareVariables(line):
     # splits line into array around =
-    lineArr = line.strip().split("=")
+    lineArr = line.strip().split("is")
     if (lineArr[0].split(" ")[1]) in RESTRICTED_NAMES:
         return None
     # gets the value of the variable
-    value = re.search('[^=]+$', line).group().strip()
+    value = re.search('[^is]+$', line).group().strip()
+    type = lineArr[0].split(" ")[0]
+    if (type == "int"):
+        eval_intExpr(value)
     # creates new Var object with Var type and value
-    toAdd = Var(lineArr[0].split(" ")[0], value)
+    toAdd = Var(type, value)
     # adds the new variables[VarName] = Var(Type, Value)
     variables[lineArr[0].split(" ")[1]] = toAdd
     return True
+
+def eval_intExpr(expr):
+    print(expr)
+
 
 # show(x);
 # show("Hello World!");
