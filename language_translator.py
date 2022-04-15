@@ -46,7 +46,6 @@ def declareVariables(line):
         return None
     # gets the value of the variable, removes semicolon
     value = re.search('(?<=is).*', line).group().strip()
-    print(value)
     value = value.replace(";", "")
     type = lineArr[0].split(" ")[0]
     if (type == "int"):
@@ -155,7 +154,7 @@ def bool_expr():
     Getter for regex for bool expressions.
     :return: raw string
     """
-    return r'(([!]?(true|false|[A-Za-z]+) (&&|\|\|) )|(([0-9A-Za-z]+) (<|>|==) )|[!]?(true|false|[A-Za-z]+))+'
+    return r'(([!]?(true|false|[A-Za-z]+) (&&|\|\|) )|(([0-9A-Za-z]+) (<|>|==) )|[!]?(true|false|["A-Za-z"]+))+'
 
 
 def execute_statements(stmts):
@@ -177,12 +176,10 @@ def iterateLines(lines):
     bracketToGet = 0
     numConditions = 0
     comment_pattern = re.compile(r'^([\s]*)@([\S\s]+)')
-    # TODO: make is so declare bool x = True || False && 31 < 2 returns something
     declare_pattern = re.compile(r'^(int|string|bool) ([A-Za-z]+) is (true|false|[0-9]+|["\s\S"]+|' + int_var_expr()
                                  + r');([\s]?)')
     print_pattern = re.compile(r'^show\((([A-Za-z]+)|"([\S\s]+)")\);$')
-    if_pattern = re.compile(r'^(if) \(' + bool_expr() + r'\) \{\s?')
-    while_pattern = re.compile(r'^(while) \(' + bool_expr() + r'\) \{\s?')
+    conditional_pattern = re.compile(r'^(while|if) \(' + bool_expr() + r'\) \{\s?')
     condition_end_pattern = re.compile(r'}')
     while_blocks = []
     while_count = 0  # counts number of concurrent loops for tracking blocks of statements.
@@ -191,10 +188,8 @@ def iterateLines(lines):
     for i, line in enumerate(lines):
         # print(lines[i].strip("\n"))
         line = line.strip()
-
         if not line:
             continue
-
         if "}" in line:
             numConditions -= 1
         elif "{" in line:
