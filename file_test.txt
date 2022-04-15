@@ -4,9 +4,17 @@ bool a is true && false && x <y;
 string s = "fwa";
 @show(x);
 if (true || false && y > x && "X" > "Y") {
+int x is 1+y*4/3;
+show(x);
+while (x > 0) {
+    int x is x-1;
+}
+show(x);
+if (True) {
     int x is 34;
     @show(x);
     if (x < y) {
         @show(x);
     }
 }
+
