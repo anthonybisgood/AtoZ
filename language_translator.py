@@ -44,11 +44,13 @@ def declareVariables(line):
     lineArr = line.strip().split("is")
     if (lineArr[0].split(" ")[1]) in RESTRICTED_NAMES:
         return None
-    # gets the value of the variable
+    # gets the value of the variable, removes semicolon
     value = re.search('[^is]+$', line).group().strip()
+    value = value.replace(";", "")
+
     type = lineArr[0].split(" ")[0]
     if (type == "int"):
-        value = eval_intExpr(line)
+        value = eval_intExpr(value)
     if (type == "bool"):
         value = eval_boolExpr(value)
     # creates new Var object with Var type and value
@@ -101,6 +103,23 @@ def ifFunction(line):
     return False
 
 
+def int_var_expr():
+    """
+    Getter for regex for variable and int expressions.
+    :return: raw string
+    """
+    return r'(([\d]+|[A-Za-z]+)([ ]?)(\+|-|\*|\/)([ ]?)([\d]+|[A-Za-z]+))(([ ]?)(\+|-|\*|\/)([ ]?)([\d]+|[A-Za-z]+))*'
+
+
+def bool_expr():
+    """
+    Getter for regex for bool expressions.
+    :return: raw string
+    """
+    return r'(([!]?(true|false|[A-Za-z]+) (&&|\|\|) [!]?(true|false|[A-Za-z]+))' \
+           r'|(([0-9A-Za-z]+) (<|>|==) ([0-9A-Za-z]+))|[!]?(true|false|[A-Za-z]+))'
+
+
 def iterateLines(lines):
     """Iterates over teh lines in the output of given code.
 
@@ -112,16 +131,15 @@ def iterateLines(lines):
     # which level you are in
     bracketToGet = 0
     numConditions = 0
-    comment_pattern = re.compile(r'^@([\S\s]+)')
-    declare_pattern = re.compile(r'^(int|string|bool) ([A-Za-z]+) is (true|false|[0-9]+|"[\s\S]+");([\s]?)')
+    comment_pattern = re.compile(r'^([\s]*)@([\S\s]+)')
+    declare_pattern = re.compile(r'^(int|string|bool) ([A-Za-z]+) is (true|false|[0-9]+|"[\s\S]+"|' + int_var_expr()
+                                 + r');([\s]?)')
     print_pattern = re.compile(r'^show\((([A-Za-z]+)|"([\S\s]+)")\);$')
-    conditional_pattern = re.compile(r'^(while|if) \((([!]?(true|false|[A-Za-z]+) (&&|\|\|) [!]?(true|false|[A-Za-z]+))|'
-                                     r'(([0-9A-Za-z]+) (<|>|==) ([0-9A-Za-z]+))|[!]?(true|false|[A-Za-z]+))\) {\s?')
-    boolexpr_pattern = re.compile(r'(([!]?(true|false|[A-Za-z]+) (&&|\|\|) [!]?(true|false|[A-Za-z]+))|'
-                                  r'(([0-9A-Za-z]+) (<|>|==) ([0-9A-Za-z]+))|[!]?(true|false|[A-Za-z]+))')
+    conditional_pattern = re.compile(r'^(while|if) \(' + bool_expr() + r'\) \{\s?')
+    condition_end_pattern = re.compile(r'}')
     for i, line in enumerate(lines):
         # print(lines[i].strip("\n"))
-        #line = lines[i].strip()
+        line = line.strip()
 
         if not line:
             continue
@@ -153,12 +171,11 @@ def iterateLines(lines):
             if printFunction(line) is None:
                 print("ERROR!!! STRING FORMATED INCORRECTLY.\nLINE:", line)
                 return
+        elif condition_end_pattern:
+            continue
         else:
             print(f"Syntax Error in line {i+1}:\n{line}")
             sys.exit()
-
-
-
 
 
 def main():
@@ -166,29 +183,6 @@ def main():
     file_name = "file_test.txt"
     lines = file_handler(file_name)
     iterateLines(lines)
-    # for i, line in enumerate(lines):
-    #     lineArr = line.strip().split(" ")
-    #     comment_pattern = re.compile(r'^@([\S\s]+)')
-    #     declare_pattern = re.compile(r'^(Int|String|Bool) ([A-Za-z]+) = (true|false|[0-9]+|"[\s\S]+");([\s]?)')
-    #     print_pattern = re.compile(r'^show\((([A-Za-z]+)|"([\S\s]+)")\);$')
-    #     conditional_pattern = re.compile(r'^(while|if) \((([!]?(true|false|[A-Za-z]+) (&&|\|\|) [!]?(true|false|[A-Za-z]+))|'
-    #                                      r'(([0-9A-Za-z]+) (<|>|==) ([0-9A-Za-z]+))|[!]?(true|false|[A-Za-z]+))\) {\s?')
-    #     boolexpr_pattern = re.compile(r'(([!]?(true|false|[A-Za-z]+) (&&|\|\|) [!]?(true|false|[A-Za-z]+))|'
-    #                                   r'(([0-9A-Za-z]+) (<|>|==) ([0-9A-Za-z]+))|[!]?(true|false|[A-Za-z]+))')
-    #     # if commented line
-    #     if comment_pattern.search(line):
-    #         continue
-    #     # if assign variable
-    #     elif declare_pattern.search(line):
-    #         declareVariables(line)
-    #     # if print function
-    #     elif print_pattern.search(line):
-    #         printFunction(line)
-    #     elif conditional_pattern.search(line):
-    #         pass
-    #     else:
-    #         print(f"Syntax Error in line {i+1}:\n{line}")
-    #         sys.exit()
 
 
 if __name__ == "__main__":

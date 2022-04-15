@@ -1,6 +1,6 @@
 int y is 42;
 int x is 1+y*4/3;
-show(y);
+show(x);
 if (True) {
     int x is 34;
     show("Should be here!");
