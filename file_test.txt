@@ -1,3 +1,10 @@
-int hello = 54
-int y=13
-int z= 145
+if (True) {
+    int x = 34
+    if (False) {
+        if (False) {
+        }
+        show(x)
+    }
+    show(x)
+}
+
