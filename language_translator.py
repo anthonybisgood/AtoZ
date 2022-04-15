@@ -156,30 +156,30 @@ def main():
     # file_name = input()
     file_name = "file_test.txt"
     lines = file_handler(file_name)
-    for i, line in enumerate(lines):
-        lineArr = line.strip().split(" ")
-        comment_pattern = re.compile(r'^@([\S\s]+)')
-        declare_pattern = re.compile(r'^(Int|String|Bool) ([A-Za-z]+) = (true|false|[0-9]+|"[\s\S]+");([\s]?)')
-        print_pattern = re.compile(r'^show\((([A-Za-z]+)|"([\S\s]+)")\);$')
-        conditional_pattern = re.compile(r'^(while|if) \((([!]?(true|false|[A-Za-z]+) (&&|\|\|) [!]?(true|false|[A-Za-z]+))|'
-                                         r'(([0-9A-Za-z]+) (<|>|==) ([0-9A-Za-z]+))|[!]?(true|false|[A-Za-z]+))\) {\s?')
-        boolexpr_pattern = re.compile(r'(([!]?(true|false|[A-Za-z]+) (&&|\|\|) [!]?(true|false|[A-Za-z]+))|'
-                                      r'(([0-9A-Za-z]+) (<|>|==) ([0-9A-Za-z]+))|[!]?(true|false|[A-Za-z]+))')
-        # if commented line
-        if comment_pattern.search(line):
-            continue
-        # if assign variable
-        elif declare_pattern.search(line):
-            declareVariables(line)
-        # if print function
-        elif print_pattern.search(line):
-            printFunction(line)
-        # TODO conditionals
-        elif conditional_pattern.search(line):
-            pass
-        else:
-            print(f"Syntax Error in line {i+1}:\n{line}")
-            sys.exit()
+    iterateLines(lines)
+    # for i, line in enumerate(lines):
+    #     lineArr = line.strip().split(" ")
+    #     comment_pattern = re.compile(r'^@([\S\s]+)')
+    #     declare_pattern = re.compile(r'^(Int|String|Bool) ([A-Za-z]+) = (true|false|[0-9]+|"[\s\S]+");([\s]?)')
+    #     print_pattern = re.compile(r'^show\((([A-Za-z]+)|"([\S\s]+)")\);$')
+    #     conditional_pattern = re.compile(r'^(while|if) \((([!]?(true|false|[A-Za-z]+) (&&|\|\|) [!]?(true|false|[A-Za-z]+))|'
+    #                                      r'(([0-9A-Za-z]+) (<|>|==) ([0-9A-Za-z]+))|[!]?(true|false|[A-Za-z]+))\) {\s?')
+    #     boolexpr_pattern = re.compile(r'(([!]?(true|false|[A-Za-z]+) (&&|\|\|) [!]?(true|false|[A-Za-z]+))|'
+    #                                   r'(([0-9A-Za-z]+) (<|>|==) ([0-9A-Za-z]+))|[!]?(true|false|[A-Za-z]+))')
+    #     # if commented line
+    #     if comment_pattern.search(line):
+    #         continue
+    #     # if assign variable
+    #     elif declare_pattern.search(line):
+    #         declareVariables(line)
+    #     # if print function
+    #     elif print_pattern.search(line):
+    #         printFunction(line)
+    #     elif conditional_pattern.search(line):
+    #         pass
+    #     else:
+    #         print(f"Syntax Error in line {i+1}:\n{line}")
+    #         sys.exit()
 
 
 if __name__ == "__main__":
