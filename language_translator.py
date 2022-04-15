@@ -116,9 +116,7 @@ def bool_expr():
     Getter for regex for bool expressions.
     :return: raw string
     """
-    return r'(([!]?(true|false|[A-Za-z]+) (&&|\|\|) [!]?(true|false|[A-Za-z]+))' \
-           r'|(([0-9A-Za-z]+) (<|>|==) ([0-9A-Za-z]+))|[!]?(true|false|[A-Za-z]+))'
-
+    return r'(([!]?(true|false|[A-Za-z]+) (&&|\|\|) )|(([0-9A-Za-z]+) (<|>|==) )|[!]?(true|false|[A-Za-z]+))+'
 
 def iterateLines(lines):
     """Iterates over teh lines in the output of given code.
@@ -169,7 +167,7 @@ def iterateLines(lines):
         # if print function, works for both str and variable printing
         elif print_pattern.search(line):
             if printFunction(line) is None:
-                print("ERROR!!! STRING FORMATED INCORRECTLY.\nLINE:", line)
+                print("ERROR!!! STRING FORMATTED INCORRECTLY.\nLINE:", line)
                 return
         elif condition_end_pattern:
             continue
