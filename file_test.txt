@@ -1,19 +1,21 @@
-int y is 42;
-int x is y - 12;
-show();
-show("ffff");
-show(x);
-show("fff);
+int y is 14;
+int x is 3;
 while (x > 0) {
-    int x is x-1;
+    if (y > 10) {
+        while (y > x){
+            int y is x - 1;
+        }
+    }
+    
+    int x is x - 1;
 }
-show();
+show(x);
+show(y);
+
 bool a is true && false && x < y;
 string s is "fwa";
 if (s == "fwa") {
     int x is 34;
-    show(s);
-    show(x);
     @show(x);
     if (x < y) {
         @show(x);
