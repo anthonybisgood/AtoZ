@@ -31,10 +31,12 @@ def file_handler(file_name):
     try:
         with open(file_name) as file:
             lines = file.readlines()
+            if (lines):
+                return lines
     except FileNotFoundError:
         print("File not found. Ensure that the file is in the same directory and that the name was typed without"
               " errors.")
-    return lines
+    return 
 
 
 def declareVariables(line):
@@ -49,7 +51,6 @@ def declareVariables(line):
     Args:
         line (String): The current line of the variable we want to declare, written in 
         our new language
-
     Returns:
         Boolean: True or None depending on if the operation succeded
     """
@@ -65,19 +66,25 @@ def declareVariables(line):
         value = eval_intExpr(value)
     if (type == "bool"):
         value = eval_boolExpr(value)
+    if (type == "string"):
+        value = eval_string(value)
     # creates new Var object with Var type and value
     toAdd = Var(type, value)
     # adds the new variables[VarName] = Var(Type, Value)
     variables[lineArr[0].split(" ")[1]] = toAdd
     return True
 
+def eval_string(line):
+    if ('"' not in line):
+        if (line in variables):
+            return variables[line].val
+    return line
+
 def eval_intExpr(line):
     """Evaluates integer expressions and can handle +,-,*,/,and % operations. Uses eval function
     to evaluate and return an integer.
-
     Args:
         line (String): The current line of the variable we are performing integer evaluation on.
-
     Returns:
         int: the result of our line parameter
     """
@@ -107,10 +114,8 @@ def eval_intExpr(line):
 def eval_boolExpr(expr):
     """Handles boolean expressions, can handle >, <, ==, not, and, or, and integer expresions
     in boolean expression
-
     Args:
         expr (String): a string representing a boolean expression
-
     Returns:
         Boolean: the evaluation of the boolean expression
     """
@@ -141,10 +146,8 @@ def eval_boolExpr(expr):
 # show("Hello World!");
 def printFunction(line):
     """When called, prints out the line 
-
     Args:
         line (String): The line, including show() that we are going to print
-
     Returns:
         Boolean/None: True if it works, none if formated incorrectly
     """
@@ -188,7 +191,6 @@ def execute_statements(stmts):
     """Used for while loops, stmts[0] is the conditional that we iterate through until it is false.
     stmts[1:] are the lines residing inside the while loop including other while loops. Iterates over
     the list and calls iterateLines with the statements inside the while loop
-
     Args:
         stmts (List[String]): a list of strings representing the commands to run
     """
@@ -198,7 +200,6 @@ def execute_statements(stmts):
 
 def iterateLines(lines):
     """Iterates over teh lines in the output of given code.
-
     Args:
         lines (array): an array of code given as strings
     """
@@ -228,13 +229,11 @@ def iterateLines(lines):
         elif "{" in line:
             numConditions += 1
         if comment_pattern.search(line) or skipLoop:
-
             if skipLoop:
                 if "}" in line and numConditions == bracketToGet:
                     skipLoop = False
             continue
         elif if_pattern.search(line):
-
             condition_brackets.append("if")
             condition = re.search(r'(?<=\()(.*?)(?=\))', line).group()
             if ifFunction(condition):
@@ -286,7 +285,7 @@ def main():
     if (len(sys.argv) > 1):
         file_name = sys.argv[1]
     else:
-        file_name = "file_test.txt"
+        file_name = "if_and_while_loop_tests.txt"
     lines = file_handler(file_name)
     iterateLines(lines)
 

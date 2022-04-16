@@ -1,0 +1,7 @@
+string s is "ddd";
+string y is s;
+show(y);
+show(s);
+show("making s an Integer");
+int s is 33;
+string s is "dddd";

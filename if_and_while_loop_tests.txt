@@ -1,8 +1,12 @@
 string s is "hello world";
+string y is s;
 show(s);
-show("hello world");
+show(y);
+if (s == y) {
+    show("equality");
+}
 
-if (s == s) {
+if (s == "hello world") {
     show("String equality works");
 }
 
