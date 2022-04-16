@@ -1,4 +1,6 @@
 @ show the command line input
+@ to run, simply type this command into the terminal:
+@ python3 language_translator.py file_name.txt <type> <value>
 
 arg(X);
 
