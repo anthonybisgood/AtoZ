@@ -1,0 +1,5 @@
+@ show the command line input
+
+arg(X);
+
+show(X);
