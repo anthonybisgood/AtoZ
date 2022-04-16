@@ -1,11 +1,9 @@
 int y is 14;
 int x is 32;
 if (y < x) {
-    while (x > 0) {
+    while (x >= 0) {
         int x is x - 1;
-        show(x);
     }
-    
 }
 show(x);
 show(y);
@@ -13,10 +11,12 @@ show(y);
 bool a is true && false && x < y;
 string s is "fwa";
 if (s == "fwa") {
-    int x is 34;
-    @show(x);
-    if (x < y) {
-        @show(x);
-    }
+    show(s);
 }
+
+string badString is "hello";
+int badInt is -1;
+int badA is badInt + badInt;
+show(badA);
+int badRes is "dadw" + badInt;
 
