@@ -1,13 +1,11 @@
 int y is 14;
-int x is 3;
-while (x > 0) {
-    if (y > 10) {
-        while (y > x){
-            int y is x - 1;
-        }
+int x is 32;
+if (y < x) {
+    while (x > 0) {
+        int x is x - 1;
+        show(x);
     }
     
-    int x is x - 1;
 }
 show(x);
 show(y);

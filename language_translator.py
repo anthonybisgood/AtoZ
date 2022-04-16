@@ -207,7 +207,6 @@ def iterateLines(lines):
     condition_end_pattern = re.compile(r'}')
     
     while_blocks = []
-    while_count = 0  # counts number of concurrent loops for tracking blocks of statements.
     condition_brackets = [] # stack of strings which represent what each { is associated with.
     in_while = False
     for i, line in enumerate(lines):
@@ -218,6 +217,20 @@ def iterateLines(lines):
             numConditions -= 1
         elif "{" in line:
             numConditions += 1
+        if comment_pattern.search(line) or skipLoop:
+            if skipLoop:
+                if "}" in line and numConditions == bracketToGet:
+                    skipLoop = False
+            continue
+        elif if_pattern.search(line):
+            condition_brackets.append("if")
+            condition = re.search(r'(?<=\()(.*?)(?=\))', line).group()
+            if ifFunction(condition):
+                continue
+            else:
+                bracketToGet += numConditions - 1
+                skipLoop = True
+                
         if in_while:
             if numConditions == 0:
                 end_of = condition_brackets.pop()
@@ -232,19 +245,7 @@ def iterateLines(lines):
             condition_brackets.append("while")
             condition = re.search(r'(?<=\()(.*?)(?=\))', line).group()
             while_blocks.append(condition)
-        elif comment_pattern.search(line) or skipLoop:
-            if skipLoop:
-                if "}" in line and numConditions == bracketToGet:
-                    skipLoop = False
-            continue
-        elif if_pattern.search(line):
-            condition_brackets.append("if")
-            condition = re.search(r'(?<=\()(.*?)(?=\))', line).group()
-            if ifFunction(condition):
-                continue
-            else:
-                bracketToGet += numConditions - 1
-                skipLoop = True
+        
         
         # if assign variable
         elif declare_pattern.search(line):
