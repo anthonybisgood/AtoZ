@@ -214,6 +214,7 @@ def iterateLines(lines):
     if_pattern = re.compile(r'^(if) \(' + bool_expr() + r'\) \{\s?')
     while_pattern = re.compile(r'^(while) \(' + bool_expr() + r'\) \{\s?')
     condition_end_pattern = re.compile(r'^}$')
+    arg_pattern = re.compile(r'^arg\(([A-Za-z]+)\);$')
     
     while_blocks = []
     condition_brackets = [] # stack of strings which represent what each { is associated with.
@@ -227,20 +228,20 @@ def iterateLines(lines):
         elif "{" in line:
             numConditions += 1
         if comment_pattern.search(line) or skipLoop:
-            
+
             if skipLoop:
                 if "}" in line and numConditions == bracketToGet:
                     skipLoop = False
             continue
         elif if_pattern.search(line):
-            
+
             condition_brackets.append("if")
             condition = re.search(r'(?<=\()(.*?)(?=\))', line).group()
             if ifFunction(condition):
                 continue
             else:
                 bracketToGet += numConditions - 1
-                skipLoop = True 
+                skipLoop = True
         elif in_while:
             if numConditions == 0:
                 end_of = condition_brackets.pop()
@@ -251,7 +252,6 @@ def iterateLines(lines):
                 while_blocks.append(line)
         # if we hit a while loop
         elif while_pattern.search(line):
-            
             in_while = True
             condition_brackets.append("while")
             condition = re.search(r'(?<=\()(.*?)(?=\))', line).group()
@@ -266,6 +266,15 @@ def iterateLines(lines):
             if printFunction(line) is None:
                 print("ERROR!!! STRING FORMATTED INCORRECTLY.\nLINE:", line)
                 return
+        elif arg_pattern.search(line):
+            # 2 is type, 3 is value
+            arg_type = sys.argv[2]
+            arg_val  = sys.argv[3]
+            arg_var  = re.search(r'(?<=\()(.*?)(?=\))', line).group()
+            assign_line = f"{arg_type} {arg_var} is {arg_val};"
+            if declareVariables(assign_line) is None:
+                print("ERROR!!! CANNOT NAME VARIABLES TO RESTRICTED NAMES.\nLINE:", line)
+                return
         elif condition_end_pattern.search(line):
             continue
         else:
@@ -274,8 +283,10 @@ def iterateLines(lines):
 
 
 def main():
-    # file_name = input()
-    file_name = "nested_loops.txt"
+    if (len(sys.argv) > 1):
+        file_name = sys.argv[1]
+    else:
+        file_name = "file_test.txt"
     lines = file_handler(file_name)
     iterateLines(lines)
 
