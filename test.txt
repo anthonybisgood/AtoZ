@@ -11,6 +11,10 @@ int x is 32;
 int Q is 42;
 
 while (x >= 0) {
+    while (Q >= 20) {
+        int Q is Q - 1;
+        show(Q);
+    }
     int x is x - 1;
 }
 
@@ -23,21 +27,6 @@ bool a is true && false && x < y;
 string s is "fwa";
 if (s == "fwa") {
     show(s);
-
 }
-
-int y is 100;
-int x is 200;
-int z is 0;
-while (x >= 0) {
-    while (z < 100) {
-        int z is z + 1;
-        int y is y + 5;
-    }
-    int x is x - 1;
-    int y is y - 1;
-}
-
 show(x);
 show(y);
-show(z);

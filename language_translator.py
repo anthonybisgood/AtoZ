@@ -233,6 +233,7 @@ def iterateLines(lines):
                 if "}" in line and numConditions == bracketToGet:
                     skipLoop = False
             continue
+        
         elif in_while:
             if numConditions == 0:
                 end_of = condition_brackets.pop()
@@ -247,6 +248,8 @@ def iterateLines(lines):
             condition_brackets.append("while")
             condition = re.search(r'(?<=\()(.*?)(?=\))', line).group()
             while_blocks.append(condition)
+            
+            
         # if assign variable
         elif declare_pattern.search(line):
             if declareVariables(line) is None:
@@ -277,6 +280,7 @@ def iterateLines(lines):
         elif condition_end_pattern.search(line):
             continue
         else:
+            print(while_blocks)
             print(f"Syntax Error in line {i+1}:\n{line}")
             sys.exit()
 
@@ -285,7 +289,7 @@ def main():
     if (len(sys.argv) > 1):
         file_name = sys.argv[1]
     else:
-        file_name = "nested_loops.txt"
+        file_name = "test.txt"
     lines = file_handler(file_name)
     iterateLines(lines)
 
