@@ -214,6 +214,7 @@ def iterateLines(lines):
     if_pattern = re.compile(r'^(if) \(' + bool_expr() + r'\) \{\s?')
     while_pattern = re.compile(r'^(while) \(' + bool_expr() + r'\) \{\s?')
     condition_end_pattern = re.compile(r'^}$')
+    arg_pattern = re.compile(r'^arg\(([A-Za-z]+)\);$')
     
     while_blocks = []
     condition_brackets = [] # stack of strings which represent what each { is associated with.
