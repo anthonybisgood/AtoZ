@@ -184,7 +184,9 @@ def bool_expr():
     Getter for regex for bool expressions.
     :return: raw string'
     """
-    return r'(([!]?(true|false|[A-Za-z]+) (&&|\|\|) )|(([0-9A-Za-z]+) (<|>|==|>=|<=) )|[!]?(true|false|["0-9A-Za-z"]+))+'
+    return r'(([!]?(true|false|"([\S\s]+)"|[0-9A-Za-z]+) (&&|\|\|) )|' \
+           r'(("([\S\s]+)"|[0-9A-Za-z]+) (<|>|==|>=|<=|-|\+|\*|\/|%) )|' \
+           r'([!]?(true|false|"([\S\s]+)"|[0-9A-Za-z]+)))+'
 
 
 def execute_statements(stmts):
@@ -194,6 +196,8 @@ def execute_statements(stmts):
     Args:
         stmts (List[String]): a list of strings representing the commands to run
     """
+    print(f"condition: {stmts[0]}")
+    print(f"other stuff: {stmts[1:]}")
     while eval_boolExpr(stmts[0]):
         iterateLines(stmts[1:])
 
@@ -285,7 +289,7 @@ def main():
     if (len(sys.argv) > 1):
         file_name = sys.argv[1]
     else:
-        file_name = "long_program.txt"
+        file_name = "test.txt"
     lines = file_handler(file_name)
     iterateLines(lines)
 

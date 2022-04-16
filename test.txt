@@ -1,6 +1,6 @@
 @fail_test.txt
 string s is "hello world";
-
+show("dij2ue2{}2-");
 
 
 if (s == s) {
@@ -8,6 +8,7 @@ if (s == s) {
 
 int y is 14;
 int x is 32;
+int Q is 42;
 
 while (x >= 0) {
     int x is x - 1;
