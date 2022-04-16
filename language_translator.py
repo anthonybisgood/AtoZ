@@ -87,11 +87,13 @@ def eval_intExpr(line):
     if sol:
         for el in sol:
             if (el not in variables):
-                print("INVALID VARIABLE IN INTEGER EXPRESSION:", re.findall('[a-zA-Z]+', expr),
-                "\nLINE:", line)
+                print("INVALID VARIABLE IN INTEGER EXPRESSION:", el, "\nLINE:", line)
                 exit(1)
             elif (el in variables):
                 val = variables[el].val
+                if (variables[el].type != "int"):
+                    print(f"CANNOT ADD INTEGER AND ANY OTHER TYPE: {el}\nLINE: {line}")
+                    exit(1)
                 expr = expr.replace(el, str(val))
     try:
         res = math.floor(eval(expr))
@@ -179,10 +181,17 @@ def bool_expr():
     Getter for regex for bool expressions.
     :return: raw string'
     """
-    return r'(([!]?(true|false|[A-Za-z]+) (&&|\|\|) )|(([0-9A-Za-z]+) (<|>|==) )|[!]?(true|false|["0-9A-Za-z"]+))+'
+    return r'(([!]?(true|false|[A-Za-z]+) (&&|\|\|) )|(([0-9A-Za-z]+) (<|>|==|>=|<=) )|[!]?(true|false|["0-9A-Za-z"]+))+'
 
 
 def execute_statements(stmts):
+    """Used for while loops, stmts[0] is the conditional that we iterate through until it is false.
+    stmts[1:] are the lines residing inside the while loop including other while loops. Iterates over
+    the list and calls iterateLines with the statements inside the while loop
+
+    Args:
+        stmts (List[String]): a list of strings representing the commands to run
+    """
     while eval_boolExpr(stmts[0]):
         iterateLines(stmts[1:])
 
@@ -204,10 +213,9 @@ def iterateLines(lines):
     print_pattern = re.compile(r'^show\((([A-Za-z]+)|"([\S\s]+)")\);$')
     if_pattern = re.compile(r'^(if) \(' + bool_expr() + r'\) \{\s?')
     while_pattern = re.compile(r'^(while) \(' + bool_expr() + r'\) \{\s?')
-    condition_end_pattern = re.compile(r'}')
+    condition_end_pattern = re.compile(r'^}$')
     
     while_blocks = []
-    while_count = 0  # counts number of concurrent loops for tracking blocks of statements.
     condition_brackets = [] # stack of strings which represent what each { is associated with.
     in_while = False
     for i, line in enumerate(lines):
@@ -218,7 +226,22 @@ def iterateLines(lines):
             numConditions -= 1
         elif "{" in line:
             numConditions += 1
-        if in_while:
+        if comment_pattern.search(line) or skipLoop:
+            
+            if skipLoop:
+                if "}" in line and numConditions == bracketToGet:
+                    skipLoop = False
+            continue
+        elif if_pattern.search(line):
+            
+            condition_brackets.append("if")
+            condition = re.search(r'(?<=\()(.*?)(?=\))', line).group()
+            if ifFunction(condition):
+                continue
+            else:
+                bracketToGet += numConditions - 1
+                skipLoop = True 
+        elif in_while:
             if numConditions == 0:
                 end_of = condition_brackets.pop()
                 if end_of == "while":
@@ -228,24 +251,11 @@ def iterateLines(lines):
                 while_blocks.append(line)
         # if we hit a while loop
         elif while_pattern.search(line):
+            
             in_while = True
             condition_brackets.append("while")
             condition = re.search(r'(?<=\()(.*?)(?=\))', line).group()
             while_blocks.append(condition)
-        elif comment_pattern.search(line) or skipLoop:
-            if skipLoop:
-                if "}" in line and numConditions == bracketToGet:
-                    skipLoop = False
-            continue
-        elif if_pattern.search(line):
-            condition_brackets.append("if")
-            condition = re.search(r'(?<=\()(.*?)(?=\))', line).group()
-            if ifFunction(condition):
-                continue
-            else:
-                bracketToGet += numConditions - 1
-                skipLoop = True
-        
         # if assign variable
         elif declare_pattern.search(line):
             if declareVariables(line) is None:
@@ -256,7 +266,7 @@ def iterateLines(lines):
             if printFunction(line) is None:
                 print("ERROR!!! STRING FORMATTED INCORRECTLY.\nLINE:", line)
                 return
-        elif condition_end_pattern:
+        elif condition_end_pattern.search(line):
             continue
         else:
             print(f"Syntax Error in line {i+1}:\n{line}")
