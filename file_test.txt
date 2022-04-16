@@ -1,12 +1,13 @@
 int y is 14;
 int x is 3;
+@arg(T);
+@show(T);
 while (x > 0) {
     if (y > 10) {
-        while (y > x){
+        while (y > x) {
             int y is x - 1;
         }
     }
-    
     int x is x - 1;
 }
 show(x);

@@ -205,6 +205,7 @@ def iterateLines(lines):
     if_pattern = re.compile(r'^(if) \(' + bool_expr() + r'\) \{\s?')
     while_pattern = re.compile(r'^(while) \(' + bool_expr() + r'\) \{\s?')
     condition_end_pattern = re.compile(r'}')
+    arg_pattern = re.compile(r'^arg\(([A-Za-z]+)\);$')
     
     while_blocks = []
     while_count = 0  # counts number of concurrent loops for tracking blocks of statements.
@@ -256,7 +257,16 @@ def iterateLines(lines):
             if printFunction(line) is None:
                 print("ERROR!!! STRING FORMATTED INCORRECTLY.\nLINE:", line)
                 return
-        elif condition_end_pattern:
+        elif arg_pattern.search(line):
+            # 2 is type, 3 is value
+            arg_type = sys.argv[2]
+            arg_val  = sys.argv[3]
+            arg_var  = re.search(r'(?<=\()(.*?)(?=\))', line).group()
+            assign_line = f"{arg_type} {arg_var} is {arg_val};"
+            if declareVariables(assign_line) is None:
+                print("ERROR!!! CANNOT NAME VARIABLES TO RESTRICTED NAMES.\nLINE:", line)
+                return
+        elif condition_end_pattern.search(line):
             continue
         else:
             print(f"Syntax Error in line {i+1}:\n{line}")
@@ -264,8 +274,7 @@ def iterateLines(lines):
 
 
 def main():
-    # file_name = input()
-    file_name = "file_test.txt"
+    file_name = sys.argv[1]
     lines = file_handler(file_name)
     iterateLines(lines)
 
