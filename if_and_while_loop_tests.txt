@@ -7,8 +7,12 @@ if (s == y) {
     show("equality");
 }
 
-if (s == "hello world") {
+if ("hello world" == "hello world") {
     show("String equality works");
+}
+
+if (s == "hello world") {
+    show("Variable equality works");
 }
 
 int y is 100;
