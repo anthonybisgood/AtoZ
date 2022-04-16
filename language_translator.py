@@ -128,10 +128,6 @@ def eval_boolExpr(expr):
             if (el in variables):
                 val = variables[el].val
                 expr = expr.replace(el, str(val))
-            else:
-                print("INVALID VARIABLE IN BOOLEAN EXPRESSION:", el,
-                "\nLINE:", expr)
-                exit(1)
     expr = expr.replace("&&", " and ").replace("||", " or ").replace("!", " not ").replace("true", " True ").replace("false", " False ")
     try:
         res = eval(expr)
@@ -196,8 +192,8 @@ def execute_statements(stmts):
     Args:
         stmts (List[String]): a list of strings representing the commands to run
     """
-    print(f"condition: {stmts[0]}")
-    print(f"other stuff: {stmts[1:]}")
+    #print(f"condition: {stmts[0]}")
+    #print(f"other stuff: {stmts[1:]}")
     while eval_boolExpr(stmts[0]):
         iterateLines(stmts[1:])
 
@@ -289,7 +285,7 @@ def main():
     if (len(sys.argv) > 1):
         file_name = sys.argv[1]
     else:
-        file_name = "test.txt"
+        file_name = "nested_loops.txt"
     lines = file_handler(file_name)
     iterateLines(lines)
 
