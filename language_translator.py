@@ -274,7 +274,10 @@ def iterateLines(lines):
 
 
 def main():
-    file_name = sys.argv[1]
+    if (len(sys.argv) > 1):
+        file_name = sys.argv[1]
+    else:
+        file_name = "file_test.txt"
     lines = file_handler(file_name)
     iterateLines(lines)
 
