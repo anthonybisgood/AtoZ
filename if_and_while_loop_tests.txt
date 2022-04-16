@@ -1,27 +1,9 @@
-
 string s is "hello world";
 show(s);
 show("hello world");
 
 if (s == s) {
     show("String equality works");
-
-int y is 14;
-int x is 32;
-if (y < x) {
-    while (x >= 0) {
-        int x is x - 1;
-    }
-}
-show(x);
-show(y);
-arg(Q);
-show(Q);
-bool a is true && false && x < y;
-string s is "fwa";
-if (s == "fwa") {
-    show(s);
-
 }
 
 int y is 100;

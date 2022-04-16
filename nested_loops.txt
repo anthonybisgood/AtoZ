@@ -1,0 +1,22 @@
+@show("comments work");
+if (true && true || false && 12 == 12 || false) {
+    show("Logic Works");
+}
+
+if ("a" > 1) {
+    show("string to Int comparisons");
+}
+
+if (true) {
+    show("true");
+    if (false || true) {
+        show("true||false");
+    }
+    if (true) {
+        show("true2");
+    }
+    if (False) {
+        show("false2");
+    }
+}
+show("finished");
