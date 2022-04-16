@@ -248,8 +248,6 @@ def iterateLines(lines):
             condition_brackets.append("while")
             condition = re.search(r'(?<=\()(.*?)(?=\))', line).group()
             while_blocks.append(condition)
-            
-            
         # if assign variable
         elif declare_pattern.search(line):
             if declareVariables(line) is None:
@@ -283,7 +281,6 @@ def iterateLines(lines):
             print(while_blocks)
             print(f"Syntax Error in line {i+1}:\n{line}")
             sys.exit()
-
 
 def main():
     if (len(sys.argv) > 1):
