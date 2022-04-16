@@ -1,4 +1,4 @@
-
+@fail_test.txt
 string s is "hello world";
 
 

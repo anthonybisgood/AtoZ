@@ -1,0 +1,14 @@
+@long_program.txt
+@long program demonstrating all sorts of functions
+int x is 0;
+int y is 10;
+int z is y%3;
+while (x <= y) {
+    int z is x % 2;
+    if (z == 0) {
+        show(x);
+    }
+    int x is x + 1;
+}
+
+

@@ -1,3 +1,4 @@
+@if_and_while_loop_tests.txt
 string s is "hello world";
 string y is s;
 show(s);

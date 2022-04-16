@@ -1,0 +1,6 @@
+@fail_type_comparisons.txt
+int x is 12;
+string y is "2231";
+int t is x + y;
+bool z is x == y;
+show(t);

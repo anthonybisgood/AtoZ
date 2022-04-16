@@ -1,0 +1,11 @@
+@fail_ifStatement.txt
+int x is 12;
+int x is x /12;
+show(x);
+if (x == 1) {
+    show(x);
+}
+show("Failing to place bracket correctly");
+if (x == 1){
+    show(x);
+}

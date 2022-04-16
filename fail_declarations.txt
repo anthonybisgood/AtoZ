@@ -1,7 +1,12 @@
+@fail_declarations.txt
 string s is "ddd";
 string y is s;
 show(y);
 show(s);
 show("making s an Integer");
 int s is 33;
+show(s);
 string s is "dddd";
+show(s);
+int s = "fff";
+show(s);

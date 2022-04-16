@@ -176,7 +176,7 @@ def int_var_expr():
     Getter for regex for variable and int expressions.
     :return: raw string
     """
-    return r'(([\d]+|[A-Za-z]+)([ ]?)(\+|-|\*|\/)([ ]?)([\d]+|[A-Za-z]+))(([ ]?)(\+|-|\*|\/)([ ]?)([\d]+|[A-Za-z]+))*'
+    return r'(([\d]+|[A-Za-z]+)([ ]?)(\+|-|\*|\/|\%)([ ]?)([\d]+|[A-Za-z]+))(([ ]?)(\+|-|\*|\/|\%)([ ]?)([\d]+|[A-Za-z]+))*'
 
 
 def bool_expr():
@@ -233,14 +233,6 @@ def iterateLines(lines):
                 if "}" in line and numConditions == bracketToGet:
                     skipLoop = False
             continue
-        elif if_pattern.search(line):
-            condition_brackets.append("if")
-            condition = re.search(r'(?<=\()(.*?)(?=\))', line).group()
-            if ifFunction(condition):
-                continue
-            else:
-                bracketToGet += numConditions - 1
-                skipLoop = True
         elif in_while:
             if numConditions == 0:
                 end_of = condition_brackets.pop()
@@ -265,6 +257,14 @@ def iterateLines(lines):
             if printFunction(line) is None:
                 print("ERROR!!! STRING FORMATTED INCORRECTLY.\nLINE:", line)
                 return
+        elif if_pattern.search(line):
+            condition_brackets.append("if")
+            condition = re.search(r'(?<=\()(.*?)(?=\))', line).group()
+            if ifFunction(condition):
+                continue
+            else:
+                bracketToGet += numConditions - 1
+                skipLoop = True
         elif arg_pattern.search(line):
             # 2 is type, 3 is value
             arg_type = sys.argv[2]
@@ -285,7 +285,7 @@ def main():
     if (len(sys.argv) > 1):
         file_name = sys.argv[1]
     else:
-        file_name = "if_and_while_loop_tests.txt"
+        file_name = "long_program.txt"
     lines = file_handler(file_name)
     iterateLines(lines)
 
