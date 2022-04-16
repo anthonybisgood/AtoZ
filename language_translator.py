@@ -275,7 +275,7 @@ def iterateLines(lines):
 
 def main():
     # file_name = input()
-    file_name = "file_test.txt"
+    file_name = "nested_loops.txt"
     lines = file_handler(file_name)
     iterateLines(lines)
 
