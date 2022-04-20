@@ -203,6 +203,7 @@ def iterateLines(lines):
     Args:
         lines (array): an array of code given as strings
     """
+    argNum = 0
     skipLoop = False
     # if we have to skip over if statements inside of if statements, keep track of
     # which level you are in
@@ -233,7 +234,6 @@ def iterateLines(lines):
                 if "}" in line and numConditions == bracketToGet:
                     skipLoop = False
             continue
-        
         elif in_while:
             if numConditions == 0:
                 end_of = condition_brackets.pop()
@@ -268,10 +268,11 @@ def iterateLines(lines):
                 skipLoop = True
         elif arg_pattern.search(line):
             # 2 is type, 3 is value
-            arg_type = sys.argv[2]
-            arg_val  = sys.argv[3]
+            arg_type = sys.argv[2 + argNum*2]
+            arg_val  = sys.argv[3 + argNum*2]
             arg_var  = re.search(r'(?<=\()(.*?)(?=\))', line).group()
             assign_line = f"{arg_type} {arg_var} is {arg_val};"
+            argNum = argNum + 1
             if declareVariables(assign_line) is None:
                 print("ERROR!!! CANNOT NAME VARIABLES TO RESTRICTED NAMES.\nLINE:", line)
                 return

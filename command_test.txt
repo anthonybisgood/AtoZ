@@ -3,5 +3,6 @@
 @ python3 language_translator.py file_name.txt <type> <value>
 
 arg(X);
-
 show(X);
+arg(Y);
+show(Y);
