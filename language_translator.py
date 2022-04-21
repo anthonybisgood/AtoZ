@@ -106,9 +106,14 @@ def eval_intExpr(line):
     Returns:
         int: the result of our line parameter
     """
-    expr = re.search('[^is]+$', line).group().strip()
-    sol = re.findall('[a-zA-Z]+', expr)
-    # if variables
+    expr = line.strip()
+    temp = line.split(" ")
+    sol = []
+    # if variable
+    for el in temp:
+        if el.isalpha():
+            sol.append(el.strip())
+    #print(expr)
     if sol:
         for el in sol:
             if (el not in variables):
@@ -116,10 +121,13 @@ def eval_intExpr(line):
                 exit(1)
             elif (el in variables):
                 val = variables[el].val
+                #print(el,":", val)
                 if (variables[el].type != "int"):
                     print(f"CANNOT ADD INTEGER AND ANY OTHER TYPE: {el}\nLINE: {line}")
                     exit(1)
-                expr = expr.replace(el, str(val))
+                #print(el, ",", expr)
+                expr = re.sub(r"\b{}\b".format(el), str(val), expr)
+                #print(expr)
     try:
         res = math.floor(eval(expr))
         return res
@@ -202,7 +210,7 @@ def bool_expr():
     :return: raw string'
     """
     return r'(([!]?(true|false|"([\S\s]+)"|[0-9A-Za-z]+) (&&|\|\|) )|' \
-           r'(("([\S\s]+)"|[0-9A-Za-z]+) (<|>|==|>=|<=|-|\+|\*|\/|%) )|' \
+           r'(("([\S\s]+)"|[0-9A-Za-z]+) (<=|>=|==|>|<|-|\+|\*|\/|%) )|' \
            r'([!]?(true|false|"([\S\s]+)"|[0-9A-Za-z]+)))+'
 
 
@@ -213,11 +221,8 @@ def execute_statements(stmts):
     Args:
         stmts (List[String]): a list of strings representing the commands to run
     """
-    #print(f"condition: {stmts[0]}")
-    #print(f"other stuff: {stmts[1:]}")
     while eval_boolExpr(stmts[0]):
         iterateLines(stmts[1:])
-
 
 def iterateLines(lines):
     """Iterates over teh lines in the output of given code.
@@ -238,7 +243,6 @@ def iterateLines(lines):
     while_pattern = re.compile(r'^(while) \(' + bool_expr() + r'\) \{\s?')
     condition_end_pattern = re.compile(r'^}$')
     arg_pattern = re.compile(r'^arg\(([A-Za-z]+)\);$')
-    
     while_blocks = []
     condition_brackets = [] # stack of strings which represent what each { is associated with.
     in_while = False
@@ -260,6 +264,7 @@ def iterateLines(lines):
                 end_of = condition_brackets.pop()
                 if end_of == "while":
                     execute_statements(while_blocks)
+                    while_blocks = []
                     in_while = False
             else:
                 while_blocks.append(line)
@@ -300,7 +305,6 @@ def iterateLines(lines):
         elif condition_end_pattern.search(line):
             continue
         else:
-            print(while_blocks)
             print(f"Syntax Error in line {i+1}:\n{line}")
             sys.exit()
 
@@ -308,7 +312,7 @@ def main():
     if (len(sys.argv) > 1):
         file_name = sys.argv[1]
     else:
-        file_name = "test.txt"
+        file_name = "if_and_while_loop_tests.txt"
     lines = file_handler(file_name)
     iterateLines(lines)
 

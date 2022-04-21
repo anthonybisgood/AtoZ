@@ -1,19 +1,48 @@
-@nested_loops.txt
-@show("comments work");
-if (true && true || false && 12 == 12 || false) {
-    show("Logic Works");
+arg(a);
+arg(b);
+arg(m);
+
+int count is 0;
+string s is "*";
+while (count < a) {
+	string s is s + "*";
+	int count is count + 1;
 }
 
-if (true) {
-    show("true");
-    if (false || true) {
-        show("true||false");
-    }
-    if (true) {
-        show("true2");
-    }
-    if (False) {
-        show("false2");
-    }
+int i is a;
+while (i <= b) {
+	show(s);
+	string s is s + "*";
+	int i is i + 1;
 }
-show("finished");
+
+int i is 1;
+int lcm is a;
+int greater is b;
+if (a > b) {
+    int greater is a;
+}
+bool truth is True;
+while (truth) {
+    if (greater % a == 0 && greater % b == 0) {
+        int lcm is greater;
+        bool truth is False;
+    }
+    int greater is greater + 1;
+}
+
+int sum is 0;
+int i is 0;
+while (i < m) {
+	if (i % a == 0) {
+		int sum is sum + i;
+	}
+    if (i % b == 0) {
+        int sum is sum + i;
+    }
+    if (i % lcm == 0) {
+        int sum is sum - i;
+    }
+    int i is i + 1;
+}
+show(sum);
