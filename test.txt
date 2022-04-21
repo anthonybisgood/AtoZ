@@ -30,3 +30,9 @@ if (s == "fwa") {
 }
 show(x);
 show(y);
+
+string first is "this ";
+string second is "works!";
+string together is first + second;
+
+show(together);

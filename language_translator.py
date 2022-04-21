@@ -74,11 +74,26 @@ def declareVariables(line):
     variables[lineArr[0].split(" ")[1]] = toAdd
     return True
 
-def eval_string(line):
-    if ('"' not in line):
-        if (line in variables):
-            return variables[line].val
-    return line
+def eval_string(xpr):
+    if "+" in xpr:
+        xpr = xpr.split("+")
+    else:
+        xpr = [xpr]
+    retval = ""
+    for line in xpr:
+        line = line.strip()
+        if ('"' not in line):
+            if (line in variables):
+                var = variables[line]
+                if var.type != "string":
+                    print("Type Error: string can only be concatenated with string.")
+                    sys.exit(0)
+                retval = retval.strip('"')
+                retval += var.val.strip('"')
+                retval = '"' + retval + '"'
+                continue
+        retval += line
+    return retval
 
 def eval_intExpr(line):
     """Evaluates integer expressions and can handle +,-,*,/,and % operations. Uses eval function
@@ -157,7 +172,10 @@ def printFunction(line):
         return True
     # print variable
     elif (line in variables):
-        print(variables[line].val)
+        if (variables[line].type == "string"):
+            print(variables[line].val.strip('"'))
+        else:
+            print(variables[line].val)
         return True
     return None
 
