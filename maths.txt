@@ -1,0 +1,53 @@
+@maths.txt
+
+arg(a);
+arg(b);
+show("Max");
+if (a > b) {
+    show(a);
+}
+show(b);
+int sum is a + b;
+show("sum:");
+show(sum);
+int diff is a - b;
+show("diff:");
+show(diff);
+int prod is a * b;
+show("prod:");
+show(prod);
+
+int tempb is b;
+int tempa is a;
+int gcd is 0;
+bool truth is True;
+while (truth) {
+    if (tempb == 0) {
+        bool truth is false;
+        int gcd is tempa;
+    }
+    if (!tempb == 0) {
+        int temptempa is tempa;
+        int tempa is tempb;
+        int tempb is temptempa % tempb;
+    }
+}
+show("GCD");
+show(gcd);
+
+int i is 1;
+int lcm is a;
+int greater is b;
+if (a > b) {
+    int greater is a;
+}
+bool truth is True;
+while (truth) {
+    if (greater % a == 0 && greater % b == 0) {
+        int lcm is greater;
+        bool truth is False;
+    }
+    int greater is greater + 1;
+}
+show("LCM:");
+show(lcm);
