@@ -35,4 +35,7 @@ string first is "this ";
 string second is "works!";
 string together is first + second;
 
+string another is "one " + "two!";
+
 show(together);
+show(another);

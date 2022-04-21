@@ -92,7 +92,10 @@ def eval_string(xpr):
                 retval += var.val.strip('"')
                 retval = '"' + retval + '"'
                 continue
-        retval += line
+        else:
+            retval = retval.strip('"')
+            retval += line.strip('"')
+            retval = '"' + retval + '"'
     return retval
 
 def eval_intExpr(line):
